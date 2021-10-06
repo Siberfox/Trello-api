@@ -1,8 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Exclude } from 'class-transformer';
+import { User } from 'src/auth/user.entities';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
-export class Columns {
+export class UserColumn {
   @ApiProperty()
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -14,4 +16,8 @@ export class Columns {
   @ApiProperty()
   @Column()
   description: string;
+
+  @ManyToOne(() => User, (user) => user.columns, { eager: false })
+  @Exclude({ toPlainOnly: true })
+  user: User;
 }

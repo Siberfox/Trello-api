@@ -21,7 +21,7 @@ export class CommentsController {
   }
 
   @ApiOperation({ summary: 'Create comment' })
-  @Post()
+  @Post('/create')
   createComment(@Body() createCommentDto: CreateCommentDto): Promise<Comments> {
     return this.commentsService.createComment(createCommentDto);
   }

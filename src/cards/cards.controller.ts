@@ -21,7 +21,7 @@ export class CardsController {
   }
 
   @ApiOperation({ summary: 'Create card' })
-  @Post()
+  @Post('/create')
   createCard(@Body() createCardDto: CreateCardDto): Promise<Cards> {
     return this.cardsService.createCard(createCardDto);
   }
