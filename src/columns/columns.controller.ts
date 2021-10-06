@@ -1,9 +1,11 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { CreateColumnDto } from './dto/create-column.dto';
 import { Columns } from './columns.entity';
 import { ColumnsService } from './columns.service';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('columns')
+@UseGuards(AuthGuard())
 export class ColumnsController {
   constructor(private columnsService: ColumnsService) {}
 

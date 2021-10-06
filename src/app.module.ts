@@ -7,7 +7,6 @@ import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
-    ColumnsModule,
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: 'localhost',
@@ -18,6 +17,7 @@ import { AuthModule } from './auth/auth.module';
       autoLoadEntities: true,
       synchronize: true,
     }),
+    ColumnsModule,
     AuthModule,
   ],
   controllers: [AppController],
