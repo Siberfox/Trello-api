@@ -4,6 +4,8 @@ import { AppService } from './app.service';
 import { ColumnsModule } from './columns/columns.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
+import { CardsModule } from './cards/cards.module';
+import { CommentsModule } from './comments/comments.module';
 
 @Module({
   imports: [
@@ -17,8 +19,10 @@ import { AuthModule } from './auth/auth.module';
       autoLoadEntities: true,
       synchronize: true,
     }),
-    ColumnsModule,
     AuthModule,
+    ColumnsModule,
+    CardsModule,
+    CommentsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
