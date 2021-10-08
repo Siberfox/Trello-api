@@ -1,12 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsString } from 'class-validator';
 
-export class CreateColumnDto {
+export class EditCommentDto {
   @ApiProperty()
   @IsString()
-  title: string;
+  commentId: string;
 
   @ApiProperty()
   @IsString()
-  description: string;
+  message: string;
 }

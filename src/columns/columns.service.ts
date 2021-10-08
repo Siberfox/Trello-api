@@ -4,6 +4,7 @@ import { CreateColumnDto } from './dto/create-column.dto';
 import { UserColumn } from './columns.entity';
 import { ColumnsRepository } from './columns.repository';
 import { User } from 'src/auth/user.entities';
+import { EditColumnDto } from './dto/edit-column.dto';
 
 @Injectable()
 export class ColumnsService {
@@ -12,14 +13,8 @@ export class ColumnsService {
     private columnsRepository: ColumnsRepository,
   ) {}
 
-  async getColumnById(id: string): Promise<UserColumn> {
-    const column = await this.columnsRepository.findOne(id);
-
-    if (!column) {
-      throw new NotFoundException(`Column with ID "${id}" not found`);
-    }
-
-    return column;
+  async getColumnById(columnId: string, user: User): Promise<UserColumn> {
+    return this.columnsRepository.getColumnById(columnId, user);
   }
 
   async getColumns(user: User): Promise<UserColumn[]> {
@@ -31,5 +26,16 @@ export class ColumnsService {
     user: User,
   ): Promise<UserColumn> {
     return this.columnsRepository.createColumn(createColumnDto, user);
+  }
+
+  async deleteColumn(columnId: string, user: User): Promise<void> {
+    return this.columnsRepository.deleteColumn(columnId, user);
+  }
+
+  async editColumn(
+    editColumnDto: EditColumnDto,
+    user: User,
+  ): Promise<UserColumn> {
+    return this.columnsRepository.editColumn(editColumnDto, user);
   }
 }

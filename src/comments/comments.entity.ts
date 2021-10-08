@@ -1,8 +1,17 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { User } from 'src/auth/user.entities';
+import { Card } from 'src/cards/cards.entity';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { Base } from '../common/entitites/base.entity';
 
 @Entity()
-export class Comments {
+export class Comment extends Base {
   @ApiProperty()
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -10,4 +19,16 @@ export class Comments {
   @ApiProperty()
   @Column()
   message: string;
+
+  @ManyToOne(() => Card, (card) => card.comments, {
+    onDelete: 'CASCADE',
+  })
+  @JoinColumn({ name: 'cardId', referencedColumnName: 'id' })
+  card: Card;
+
+  @ManyToOne(() => User, (user) => user.comments, {
+    onDelete: 'CASCADE',
+  })
+  @JoinColumn({ name: 'userId', referencedColumnName: 'id' })
+  user: User;
 }

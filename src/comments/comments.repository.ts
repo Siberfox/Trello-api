@@ -1,18 +1,56 @@
+import { NotFoundException } from '@nestjs/common';
+import { User } from 'src/auth/user.entities';
 import { CreateCardDto } from 'src/cards/dto/create-card.dto';
 import { EntityRepository, Repository } from 'typeorm';
-import { Comments } from './comments.entity';
+import { Comment } from './comments.entity';
 import { CreateCommentDto } from './dto/create-comment.dto';
+import { EditCommentDto } from './dto/edit-comment.dto';
 
-@EntityRepository(Comments)
-export class CommentsRepository extends Repository<Comments> {
-  async createComment(createCommentDto: CreateCommentDto): Promise<Comments> {
-    const { message } = createCommentDto;
+@EntityRepository(Comment)
+export class CommentsRepository extends Repository<Comment> {
+  async getComments(cardId: string, user: User): Promise<Comment[]> {
+    const comments = await this.createQueryBuilder('comments')
+      .where({ cardId, user })
+      .getMany();
 
-    const comment = this.create({
-      message,
-    });
+    if (!comments.length) {
+      throw new NotFoundException('Comments not found');
+    }
+    return comments;
+  }
 
-    await this.save(comment);
+  async getCommentById(id: string, user: User): Promise<Comment> {
+    const comment = await this.findOne({ where: { id, user } });
+
+    if (!comment) {
+      throw new NotFoundException(`Comment with ID "${id}" not found`);
+    }
+
     return comment;
+  }
+
+  async deleteComment(id: string, user: User): Promise<void> {
+    const result = await this.delete({ id, user });
+
+    if (result.affected === 0) {
+      throw new NotFoundException(`Comments with ID "${id}" not found`);
+    }
+  }
+
+  async editComment(
+    editCommentDto: EditCommentDto,
+    user: User,
+  ): Promise<Comment> {
+    const { commentId, message } = editCommentDto;
+    const comment = await this.findOne({ where: { is: commentId, user } });
+
+    if (!comment) {
+      throw new NotFoundException(`Comment with ID "${commentId}" not found`);
+    }
+
+    const newComment = await this.create({ ...comment, message });
+    await this.save(newComment);
+
+    return newComment;
   }
 }

@@ -1,16 +1,18 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString } from 'class-validator';
+import { IsOptional, IsString } from 'class-validator';
 
-export class CreateCardDto {
+export class EditColumnDto {
   @ApiProperty()
   @IsString()
   columnId: string;
 
   @ApiProperty()
+  @IsOptional()
   @IsString()
-  title: string;
+  title?: string;
 
   @ApiProperty()
+  @IsOptional()
   @IsString()
-  description: string;
+  description?: string;
 }

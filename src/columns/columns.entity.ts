@@ -1,10 +1,19 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Exclude } from 'class-transformer';
 import { User } from 'src/auth/user.entities';
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Card } from 'src/cards/cards.entity';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { Base } from '../common/entitites/base.entity';
 
 @Entity()
-export class UserColumn {
+export class UserColumn extends Base {
   @ApiProperty()
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -17,7 +26,13 @@ export class UserColumn {
   @Column()
   description: string;
 
-  @ManyToOne(() => User, (user) => user.columns, { eager: false })
-  @Exclude({ toPlainOnly: true })
+  @ManyToOne(() => User, (user) => user.userColumns, { onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'userId', referencedColumnName: 'id' })
   user: User;
+
+  @OneToMany(() => Card, (card) => card.column, {
+    cascade: true,
+  })
+  @Exclude({ toPlainOnly: true })
+  cards: Card[];
 }

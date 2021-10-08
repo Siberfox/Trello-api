@@ -1,27 +1,55 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Comments } from './comments.entity';
+import { User } from 'src/auth/user.entities';
+import { CardsRepository } from 'src/cards/cards.repository';
+import { Comment } from './comments.entity';
 import { CommentsRepository } from './comments.repository';
 import { CreateCommentDto } from './dto/create-comment.dto';
+import { EditCommentDto } from './dto/edit-comment.dto';
 
 @Injectable()
 export class CommentsService {
   constructor(
     @InjectRepository(CommentsRepository)
     private commentsRepository: CommentsRepository,
+    private cardRepository: CardsRepository,
   ) {}
 
-  async getCommentById(id: string): Promise<Comments> {
-    const comment = await this.commentsRepository.findOne(id);
+  async getCommentById(id: string, user: User): Promise<Comment> {
+    return this.commentsRepository.getCommentById(id, user);
+  }
 
-    if (!comment) {
-      throw new NotFoundException(`Comment with ID "${id}"" not found`);
-    }
+  async createComment(
+    createCommentDto: CreateCommentDto,
+    user: User,
+  ): Promise<Comment> {
+    const { message, cardId } = createCommentDto;
+    const card = await this.cardRepository.findOne({
+      where: { id: cardId },
+    });
 
+    const comment = this.commentsRepository.create({
+      message,
+      user,
+      card,
+    });
+
+    await this.commentsRepository.save(comment);
     return comment;
   }
 
-  async createComment(createCommentDto: CreateCommentDto): Promise<Comments> {
-    return this.commentsRepository.createComment(createCommentDto);
+  async getComments(cardId: string, user: User): Promise<Comment[]> {
+    return this.commentsRepository.getComments(cardId, user);
+  }
+
+  async deleteComment(id: string, user: User): Promise<void> {
+    return this.commentsRepository.deleteComment(id, user);
+  }
+
+  async editComment(
+    editCommentDto: EditCommentDto,
+    user: User,
+  ): Promise<Comment> {
+    return this.commentsRepository.editComment(editCommentDto, user);
   }
 }

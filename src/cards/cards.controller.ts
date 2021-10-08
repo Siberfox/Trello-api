@@ -1,9 +1,21 @@
-import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { Cards } from './cards.entity';
+import { GetUser } from 'src/auth/get-user.decorator';
+import { User } from 'src/auth/user.entities';
+import { Card } from './cards.entity';
 import { CardsService } from './cards.service';
 import { CreateCardDto } from './dto/create-card.dto';
+import { EditCardDto } from './dto/edit-card.dto';
 
 @ApiTags('Cards')
 @Controller('cards')
@@ -11,18 +23,51 @@ import { CreateCardDto } from './dto/create-card.dto';
 export class CardsController {
   constructor(private cardsService: CardsService) {}
 
-  @ApiOperation({ summary: 'Get card by id' })
+  @ApiOperation({ summary: 'Create card' })
   @ApiOkResponse({
-    type: Cards,
+    type: Card,
   })
-  @Get('/:id')
-  getCardById(@Param('id') id: string): Promise<Cards> {
-    return this.cardsService.getCardById(id);
+  @Post()
+  createCard(
+    @Body() createCardDto: CreateCardDto,
+    @GetUser() user: User,
+  ): Promise<Card> {
+    return this.cardsService.createCard(createCardDto, user);
   }
 
-  @ApiOperation({ summary: 'Create card' })
-  @Post('/create')
-  createCard(@Body() createCardDto: CreateCardDto): Promise<Cards> {
-    return this.cardsService.createCard(createCardDto);
+  @ApiOperation({ summary: 'Get cards' })
+  @ApiOkResponse({
+    type: [Card],
+  })
+  @Get()
+  getCards(@Body() columnId: string, @GetUser() user: User): Promise<Card[]> {
+    return this.cardsService.getCards(columnId, user);
+  }
+
+  @ApiOperation({ summary: 'Get card by id' })
+  @ApiOkResponse({
+    type: Card,
+  })
+  @Get('/:id')
+  getCardById(@Param('id') id: string, @GetUser() user: User): Promise<Card> {
+    return this.cardsService.getCardById(id, user);
+  }
+
+  @ApiOperation({ summary: 'Edit card' })
+  @ApiOkResponse({
+    type: Card,
+  })
+  @Patch()
+  editCard(
+    @Body() editCardDto: EditCardDto,
+    @GetUser() user: User,
+  ): Promise<Card> {
+    return this.cardsService.editCard(editCardDto, user);
+  }
+
+  @ApiOperation({ summary: 'Delete card' })
+  @Delete('/:id/delete')
+  deleteCard(@Param('id') id: string, @GetUser() user: User): Promise<void> {
+    return this.cardsService.deleteCard(id, user);
   }
 }

@@ -1,9 +1,21 @@
-import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { Comments } from './comments.entity';
+import { GetUser } from 'src/auth/get-user.decorator';
+import { User } from 'src/auth/user.entities';
+import { Comment } from './comments.entity';
 import { CommentsService } from './comments.service';
 import { CreateCommentDto } from './dto/create-comment.dto';
+import { EditCommentDto } from './dto/edit-comment.dto';
 
 @ApiTags('Comments')
 @Controller('comments')
@@ -11,18 +23,48 @@ import { CreateCommentDto } from './dto/create-comment.dto';
 export class CommentsController {
   constructor(private commentsService: CommentsService) {}
 
-  @ApiOperation({ summary: 'Get comment by id' })
-  @ApiOkResponse({
-    type: Comments,
-  })
-  @Get('/:id')
-  getCommentById(@Param('id') id: string): Promise<Comments> {
-    return this.commentsService.getCommentById(id);
+  @ApiOperation({ summary: 'Create comment' })
+  @Post('')
+  createComment(
+    @Body() createCommentDto: CreateCommentDto,
+    @GetUser() user: User,
+  ): Promise<Comment> {
+    return this.commentsService.createComment(createCommentDto, user);
   }
 
-  @ApiOperation({ summary: 'Create comment' })
-  @Post('/create')
-  createComment(@Body() createCommentDto: CreateCommentDto): Promise<Comments> {
-    return this.commentsService.createComment(createCommentDto);
+  @ApiOperation({ summary: 'Get comments' })
+  @Get()
+  getComments(
+    @Body() cardId: string,
+    @GetUser() user: User,
+  ): Promise<Comment[]> {
+    return this.commentsService.getComments(cardId, user);
+  }
+
+  @ApiOperation({ summary: 'Get comment by id' })
+  @ApiOkResponse({
+    type: Comment,
+  })
+  @Get('/:id')
+  getCommentById(
+    @Param('id') id: string,
+    @GetUser() user: User,
+  ): Promise<Comment> {
+    return this.commentsService.getCommentById(id, user);
+  }
+
+  @ApiOperation({ summary: 'Edit comment' })
+  @Patch('/edit')
+  editComment(
+    @Body() editCommentDto: EditCommentDto,
+    @GetUser() user: User,
+  ): Promise<Comment> {
+    return this.commentsService.editComment(editCommentDto, user);
+  }
+
+  @ApiOperation({ summary: 'Delete comment' })
+  @Delete('/:id/delete')
+  deleteComment(@Param('id') id: string, @GetUser() user: User): Promise<void> {
+    return this.commentsService.deleteComment(id, user);
   }
 }
