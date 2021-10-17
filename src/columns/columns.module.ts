@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { ColumnsService } from './columns.service';
-import { ColumnsController } from './columns.controller';
+import { ColumnsService } from './v1/services/columns.service';
+import { ColumnsController } from './v1/columns.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ColumnsRepository } from './columns.repository';
 import { AuthModule } from 'src/auth/auth.module';

@@ -8,14 +8,14 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common';
-import { CreateColumnDto } from './dto/create-column.dto';
-import { UserColumn } from './columns.entity';
-import { ColumnsService } from './columns.service';
+import { CreateColumnDto } from './create-column.dto';
+import { UserColumn } from '../columns.entity';
+import { ColumnsService } from './services/columns.service';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { GetUser } from 'src/common/decorators/get-user.decorator';
 import { User } from 'src/users/user.entity';
-import { EditColumnDto } from './dto/edit-column.dto';
+import { EditColumnDto } from './edit-column.dto';
 
 @ApiTags('Columns')
 @Controller('columns')

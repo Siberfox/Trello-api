@@ -2,10 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/users/user.entity';
 import { ColumnsRepository } from 'src/columns/columns.repository';
-import { Card } from './cards.entity';
-import { CardsRepository } from './cards.repository';
-import { CreateCardDto } from './dto/create-card.dto';
-import { EditCardDto } from './dto/edit-card.dto';
+import { Card } from '../../cards.entity';
+import { CardsRepository } from '../../cards.repository';
+import { CreateCardDto } from '../create-card.dto';
+import { EditCardDto } from '../edit-card.dto';
 
 @Injectable()
 export class CardsService {

@@ -2,9 +2,9 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from 'src/auth/auth.module';
 import { CardsRepository } from 'src/cards/cards.repository';
-import { CommentsController } from './comments.controller';
+import { CommentsController } from './v1/comments.controller';
 import { CommentsRepository } from './comments.repository';
-import { CommentsService } from './comments.service';
+import { CommentsService } from './v1/services/comments.service';
 
 @Module({
   imports: [

@@ -12,10 +12,10 @@ import { AuthGuard } from '@nestjs/passport';
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { GetUser } from 'src/common/decorators/get-user.decorator';
 import { User } from 'src/users/user.entity';
-import { Card } from './cards.entity';
-import { CardsService } from './cards.service';
-import { CreateCardDto } from './dto/create-card.dto';
-import { EditCardDto } from './dto/edit-card.dto';
+import { Card } from '../cards.entity';
+import { CardsService } from './services/cards.service';
+import { CreateCardDto } from './create-card.dto';
+import { EditCardDto } from './edit-card.dto';
 
 @ApiTags('Cards')
 @Controller('cards')

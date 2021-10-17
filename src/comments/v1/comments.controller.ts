@@ -12,10 +12,10 @@ import { AuthGuard } from '@nestjs/passport';
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { GetUser } from 'src/common/decorators/get-user.decorator';
 import { User } from 'src/users/user.entity';
-import { Comment } from './comments.entity';
-import { CommentsService } from './comments.service';
-import { CreateCommentDto } from './dto/create-comment.dto';
-import { EditCommentDto } from './dto/edit-comment.dto';
+import { Comment } from '../comments.entity';
+import { CommentsService } from './services/comments.service';
+import { CreateCommentDto } from './create-comment.dto';
+import { EditCommentDto } from './edit-comment.dto';
 
 @ApiTags('Comments')
 @Controller('comments')

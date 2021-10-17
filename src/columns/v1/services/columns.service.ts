@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { CreateColumnDto } from './dto/create-column.dto';
-import { UserColumn } from './columns.entity';
-import { ColumnsRepository } from './columns.repository';
+import { CreateColumnDto } from '../create-column.dto';
+import { UserColumn } from '../../columns.entity';
+import { ColumnsRepository } from '../../columns.repository';
 import { User } from 'src/users/user.entity';
-import { EditColumnDto } from './dto/edit-column.dto';
+import { EditColumnDto } from '../edit-column.dto';
 
 @Injectable()
 export class ColumnsService {
