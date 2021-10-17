@@ -1,9 +1,7 @@
 import { NotFoundException } from '@nestjs/common';
-import { User } from 'src/auth/user.entities';
-import { CreateCardDto } from 'src/cards/dto/create-card.dto';
+import { User } from 'src/users/user.entity';
 import { EntityRepository, Repository } from 'typeorm';
 import { Comment } from './comments.entity';
-import { CreateCommentDto } from './dto/create-comment.dto';
 import { EditCommentDto } from './dto/edit-comment.dto';
 
 @EntityRepository(Comment)

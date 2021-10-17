@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { User } from 'src/auth/user.entities';
+import { User } from 'src/users/user.entity';
 import { Card } from 'src/cards/cards.entity';
 import {
   Column,

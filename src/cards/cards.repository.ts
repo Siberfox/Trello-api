@@ -1,5 +1,5 @@
 import { NotFoundException } from '@nestjs/common';
-import { User } from 'src/auth/user.entities';
+import { User } from 'src/users/user.entity';
 import { EntityRepository, Repository } from 'typeorm';
 import { Card } from './cards.entity';
 import { EditCardDto } from './dto/edit-card.dto';

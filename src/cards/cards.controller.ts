@@ -10,8 +10,8 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { GetUser } from 'src/auth/get-user.decorator';
-import { User } from 'src/auth/user.entities';
+import { GetUser } from 'src/common/decorators/get-user.decorator';
+import { User } from 'src/users/user.entity';
 import { Card } from './cards.entity';
 import { CardsService } from './cards.service';
 import { CreateCardDto } from './dto/create-card.dto';
@@ -37,7 +37,8 @@ export class CardsController {
 
   @ApiOperation({ summary: 'Get cards' })
   @ApiOkResponse({
-    type: [Card],
+    type: Card,
+    isArray: true,
   })
   @Get()
   getCards(@Body() columnId: string, @GetUser() user: User): Promise<Card[]> {

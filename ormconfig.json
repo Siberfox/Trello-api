@@ -1,0 +1,15 @@
+{
+  "type": "postgres",
+  "host": "192.168.1.2",
+  "port": 5432,
+  "username": "postgres",
+  "password": "postgres",
+  "database": "trello",
+  "entities": ["src/**/*.entity.ts"],
+  "migrations": ["migration/*.ts"],
+  "seeds": ["seeds/**/*.seed.ts"],
+  "factories": ["factories/**/*.factory.ts"],
+  "cli": {
+    "migrationsDir": "migration"
+  }
+}

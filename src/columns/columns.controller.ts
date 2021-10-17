@@ -13,8 +13,8 @@ import { UserColumn } from './columns.entity';
 import { ColumnsService } from './columns.service';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { GetUser } from 'src/auth/get-user.decorator';
-import { User } from 'src/auth/user.entities';
+import { GetUser } from 'src/common/decorators/get-user.decorator';
+import { User } from 'src/users/user.entity';
 import { EditColumnDto } from './dto/edit-column.dto';
 
 @ApiTags('Columns')

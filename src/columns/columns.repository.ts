@@ -1,7 +1,7 @@
 import { EntityRepository, Repository } from 'typeorm';
 import { CreateColumnDto } from './dto/create-column.dto';
 import { UserColumn } from './columns.entity';
-import { User } from 'src/auth/user.entities';
+import { User } from 'src/users/user.entity';
 import { NotFoundException } from '@nestjs/common';
 import { EditColumnDto } from './dto/edit-column.dto';
 

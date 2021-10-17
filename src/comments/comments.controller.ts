@@ -10,8 +10,8 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { GetUser } from 'src/auth/get-user.decorator';
-import { User } from 'src/auth/user.entities';
+import { GetUser } from 'src/common/decorators/get-user.decorator';
+import { User } from 'src/users/user.entity';
 import { Comment } from './comments.entity';
 import { CommentsService } from './comments.service';
 import { CreateCommentDto } from './dto/create-comment.dto';
@@ -33,6 +33,10 @@ export class CommentsController {
   }
 
   @ApiOperation({ summary: 'Get comments' })
+  @ApiOkResponse({
+    type: Comment,
+    isArray: true,
+  })
   @Get()
   getComments(
     @Body() cardId: string,

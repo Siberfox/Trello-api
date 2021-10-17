@@ -1,10 +1,12 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { AuthCredentialsDto } from './dto/auth-credentials.dto';
-import { UserRepository } from './user.repository';
+import { SignUpDto } from '../users/dto/sign-up.dto';
+import { UserRepository } from '../users/user.repository';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
-import { JwtPayload, AuthToken } from './auth.types';
+import { JwtPayload } from './auth.types';
+import { AuthTokenDto } from 'src/users/dto/users.dto';
+import { SignInDto } from 'src/users/dto/sign-in.dto';
 
 @Injectable()
 export class AuthService {
@@ -14,12 +16,12 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async signUp(authCredentialsDto: AuthCredentialsDto): Promise<void> {
-    return this.userRepository.createUser(authCredentialsDto);
+  async signUp(signUpDto: SignUpDto): Promise<void> {
+    return this.userRepository.createUser(signUpDto);
   }
 
-  async signIn(authCredentialsDto: AuthCredentialsDto): Promise<AuthToken> {
-    const { email, password } = authCredentialsDto;
+  async signIn(signInDto: SignInDto): Promise<AuthTokenDto> {
+    const { email, password } = signInDto;
     const user = await this.userRepository.findOne({ email });
 
     if (user && (await bcrypt.compare(password, user.password))) {

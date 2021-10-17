@@ -2,18 +2,25 @@ import { Exclude } from 'class-transformer';
 import { Card } from 'src/cards/cards.entity';
 import { UserColumn } from 'src/columns/columns.entity';
 import { Comment } from 'src/comments/comments.entity';
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  Unique,
+} from 'typeorm';
 import { Base } from '../common/entitites/base.entity';
 
 @Entity()
+@Unique(['email'])
 export class User extends Base {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ unique: true })
+  @Column({ unique: true, nullable: false })
   email: string;
 
-  @Column()
+  @Column({ nullable: false })
   @Exclude({ toPlainOnly: true })
   password: string;
 
