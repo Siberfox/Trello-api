@@ -16,6 +16,7 @@ import { Comment } from '../comments.entity';
 import { CommentsService } from './services/comments.service';
 import { CreateCommentDto } from './create-comment.dto';
 import { EditCommentDto } from './edit-comment.dto';
+import { CommentOwnerGuard } from './guards/comment-owner.guard';
 
 @ApiTags('Comments')
 @Controller('comments')
@@ -38,11 +39,8 @@ export class CommentsController {
     isArray: true,
   })
   @Get()
-  getComments(
-    @Body() cardId: string,
-    @GetUser() user: User,
-  ): Promise<Comment[]> {
-    return this.commentsService.getComments(cardId, user);
+  getComments(@Body() cardId: string): Promise<Comment[]> {
+    return this.commentsService.getComments(cardId);
   }
 
   @ApiOperation({ summary: 'Get comment by id' })
@@ -50,25 +48,21 @@ export class CommentsController {
     type: Comment,
   })
   @Get('/:id')
-  getCommentById(
-    @Param('id') id: string,
-    @GetUser() user: User,
-  ): Promise<Comment> {
-    return this.commentsService.getCommentById(id, user);
+  getCommentById(@Param('id') id: string): Promise<Comment> {
+    return this.commentsService.getCommentById(id);
   }
 
   @ApiOperation({ summary: 'Edit comment' })
   @Patch('/edit')
-  editComment(
-    @Body() editCommentDto: EditCommentDto,
-    @GetUser() user: User,
-  ): Promise<Comment> {
-    return this.commentsService.editComment(editCommentDto, user);
+  @UseGuards(CommentOwnerGuard)
+  editComment(@Body() editCommentDto: EditCommentDto): Promise<Comment> {
+    return this.commentsService.editComment(editCommentDto);
   }
 
   @ApiOperation({ summary: 'Delete comment' })
   @Delete('/:id/delete')
-  deleteComment(@Param('id') id: string, @GetUser() user: User): Promise<void> {
-    return this.commentsService.deleteComment(id, user);
+  @UseGuards(CommentOwnerGuard)
+  deleteComment(@Param('id') id: string): Promise<void> {
+    return this.commentsService.deleteComment(id);
   }
 }

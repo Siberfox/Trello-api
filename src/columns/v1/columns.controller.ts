@@ -16,6 +16,7 @@ import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { GetUser } from 'src/common/decorators/get-user.decorator';
 import { User } from 'src/users/user.entity';
 import { EditColumnDto } from './edit-column.dto';
+import { ColumnOwnerGuard } from './guards/column-owner.guard';
 
 @ApiTags('Columns')
 @Controller('columns')
@@ -42,8 +43,8 @@ export class ColumnsController {
     isArray: true,
   })
   @Get()
-  getColumns(@GetUser() user: User): Promise<UserColumn[]> {
-    return this.columnsService.getColumns(user);
+  getColumns(): Promise<UserColumn[]> {
+    return this.columnsService.getColumns();
   }
 
   @ApiOperation({
@@ -53,11 +54,8 @@ export class ColumnsController {
     type: UserColumn,
   })
   @Get('/:id')
-  getColumnById(
-    @Param('id') id: string,
-    @GetUser() user: User,
-  ): Promise<UserColumn> {
-    return this.columnsService.getColumnById(id, user);
+  getColumnById(@Param('id') id: string): Promise<UserColumn> {
+    return this.columnsService.getColumnById(id);
   }
 
   @ApiOperation({
@@ -67,18 +65,17 @@ export class ColumnsController {
     type: UserColumn,
   })
   @Patch('/edit')
-  editColumn(
-    @Body() editColumnDto: EditColumnDto,
-    @GetUser() user: User,
-  ): Promise<UserColumn> {
-    return this.columnsService.editColumn(editColumnDto, user);
+  @UseGuards(ColumnOwnerGuard)
+  editColumn(@Body() editColumnDto: EditColumnDto): Promise<UserColumn> {
+    return this.columnsService.editColumn(editColumnDto);
   }
 
   @ApiOperation({
     summary: 'Delete column',
   })
   @Delete('/:id/delete')
-  deleteColumn(@Param('id') id: string, @GetUser() user: User): Promise<void> {
-    return this.columnsService.deleteColumn(id, user);
+  @UseGuards(ColumnOwnerGuard)
+  deleteColumn(@Param('id') id: string): Promise<void> {
+    return this.columnsService.deleteColumn(id);
   }
 }

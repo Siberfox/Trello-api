@@ -3,7 +3,7 @@ import {
   InternalServerErrorException,
 } from '@nestjs/common';
 import { EntityRepository, Repository } from 'typeorm';
-import { SignUpDto } from './dto/sign-up.dto';
+import { SignUpDto } from './v1/sign-up.dto';
 import { User } from './user.entity';
 import * as bcrypt from 'bcrypt';
 
@@ -17,15 +17,6 @@ export class UserRepository extends Repository<User> {
 
     const user = this.create({ email, password: hashedPassword });
 
-    try {
-      await this.save(user);
-    } catch (error) {
-      if (error.code === '23505') {
-        // duplicate email
-        throw new ConflictException('Email already exists');
-      } else {
-        throw new InternalServerErrorException();
-      }
-    }
+    await this.save(user);
   }
 }

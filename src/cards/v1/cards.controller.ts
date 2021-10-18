@@ -16,6 +16,7 @@ import { Card } from '../cards.entity';
 import { CardsService } from './services/cards.service';
 import { CreateCardDto } from './create-card.dto';
 import { EditCardDto } from './edit-card.dto';
+import { CardOwnerGuard } from './guards/card-owner.guard';
 
 @ApiTags('Cards')
 @Controller('cards')
@@ -41,8 +42,8 @@ export class CardsController {
     isArray: true,
   })
   @Get()
-  getCards(@Body() columnId: string, @GetUser() user: User): Promise<Card[]> {
-    return this.cardsService.getCards(columnId, user);
+  getCards(@Body() columnId: string): Promise<Card[]> {
+    return this.cardsService.getCards(columnId);
   }
 
   @ApiOperation({ summary: 'Get card by id' })
@@ -50,8 +51,8 @@ export class CardsController {
     type: Card,
   })
   @Get('/:id')
-  getCardById(@Param('id') id: string, @GetUser() user: User): Promise<Card> {
-    return this.cardsService.getCardById(id, user);
+  getCardById(@Param('id') id: string): Promise<Card> {
+    return this.cardsService.getCardById(id);
   }
 
   @ApiOperation({ summary: 'Edit card' })
@@ -59,16 +60,15 @@ export class CardsController {
     type: Card,
   })
   @Patch()
-  editCard(
-    @Body() editCardDto: EditCardDto,
-    @GetUser() user: User,
-  ): Promise<Card> {
-    return this.cardsService.editCard(editCardDto, user);
+  @UseGuards(CardOwnerGuard)
+  editCard(@Body() editCardDto: EditCardDto): Promise<Card> {
+    return this.cardsService.editCard(editCardDto);
   }
 
   @ApiOperation({ summary: 'Delete card' })
   @Delete('/:id/delete')
-  deleteCard(@Param('id') id: string, @GetUser() user: User): Promise<void> {
-    return this.cardsService.deleteCard(id, user);
+  @UseGuards(CardOwnerGuard)
+  deleteCard(@Param('id') id: string): Promise<void> {
+    return this.cardsService.deleteCard(id);
   }
 }

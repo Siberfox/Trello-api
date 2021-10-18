@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateColumnDto } from '../create-column.dto';
 import { UserColumn } from '../../columns.entity';
@@ -13,29 +13,62 @@ export class ColumnsService {
     private columnsRepository: ColumnsRepository,
   ) {}
 
-  async getColumnById(columnId: string, user: User): Promise<UserColumn> {
-    return this.columnsRepository.getColumnById(columnId, user);
+  async getColumnById(columnId: string): Promise<UserColumn> {
+    const column = await this.columnsRepository.findOne({
+      where: { id: columnId },
+    });
+
+    if (!column) {
+      throw new NotFoundException(`Column with ID "${columnId}" not found`);
+    }
+
+    return column;
   }
 
-  async getColumns(user: User): Promise<UserColumn[]> {
-    return this.columnsRepository.getColumns(user);
+  async getColumns(): Promise<UserColumn[]> {
+    const columns = await this.columnsRepository
+      .createQueryBuilder('columns')
+      .getMany();
+
+    if (!columns.length) {
+      throw new NotFoundException('Columns not found');
+    }
+
+    return columns;
   }
 
   async createColumn(
     createColumnDto: CreateColumnDto,
     user: User,
   ): Promise<UserColumn> {
-    return this.columnsRepository.createColumn(createColumnDto, user);
+    const { title, description } = createColumnDto;
+
+    const column = this.columnsRepository.create({
+      title,
+      description,
+      user,
+    });
+
+    await this.columnsRepository.save(column);
+    return column;
   }
 
-  async deleteColumn(columnId: string, user: User): Promise<void> {
-    return this.columnsRepository.deleteColumn(columnId, user);
+  async deleteColumn(columnId: string): Promise<void> {
+    await this.columnsRepository.delete({ id: columnId });
   }
 
-  async editColumn(
-    editColumnDto: EditColumnDto,
-    user: User,
-  ): Promise<UserColumn> {
-    return this.columnsRepository.editColumn(editColumnDto, user);
+  async editColumn(editColumnDto: EditColumnDto): Promise<UserColumn> {
+    const { columnId, ...properties } = editColumnDto;
+    const column = await this.columnsRepository.findOne({
+      where: { id: columnId },
+    });
+
+    const newColumn = await this.columnsRepository.create({
+      ...column,
+      ...properties,
+    });
+    await this.columnsRepository.save(newColumn);
+
+    return newColumn;
   }
 }

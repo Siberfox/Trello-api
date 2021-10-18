@@ -7,6 +7,7 @@ import { JwtService } from '@nestjs/jwt';
 import { JwtPayload } from './auth.types';
 import { AuthTokenDto } from 'src/users/v1/users.dto';
 import { SignInDto } from 'src/users/v1/sign-in.dto';
+import { User } from 'src/users/user.entity';
 
 @Injectable()
 export class AuthService {
@@ -31,5 +32,9 @@ export class AuthService {
     } else {
       throw new UnauthorizedException('Please check your login credentials');
     }
+  }
+
+  async getMe(user: User): Promise<User> {
+    return user;
   }
 }
